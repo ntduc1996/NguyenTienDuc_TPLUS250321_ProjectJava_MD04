@@ -3,7 +3,7 @@ package business.imp;
 import business.IStudentServices;
 import dao.StudentDAO;
 import dao.imp.StudentDAOImp;
-import model.Student;
+import model.entity.Student;
 import presentation.color.Color;
 import ulti.Session;
 import validate.Validator;

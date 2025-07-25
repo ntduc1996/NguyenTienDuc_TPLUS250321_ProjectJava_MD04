@@ -2,7 +2,7 @@ package presentation.admin;
 
 import business.IStudentServices;
 import business.imp.StudentServices;
-import model.Student;
+import model.entity.Student;
 import validate.Validator;
 
 import java.util.Comparator;

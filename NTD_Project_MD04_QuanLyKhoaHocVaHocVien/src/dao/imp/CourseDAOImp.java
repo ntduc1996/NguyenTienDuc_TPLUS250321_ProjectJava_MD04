@@ -1,7 +1,7 @@
 package dao.imp;
 
 import dao.CourseDAO;
-import model.Course;
+import model.entity.Course;
 import ulti.ConnectionDB;
 
 import java.sql.*;
@@ -120,9 +120,15 @@ public class CourseDAOImp implements CourseDAO {
             callSt.setInt(3, course.getDuration());
             callSt.setString(4, course.getInstructor());
             callSt.executeUpdate();
+            conn.commit();
+            return true;
         } catch (Exception e) {
             System.err.println(e.getMessage());
-
+            try {
+                conn.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
         } finally {
             ConnectionDB.closeConnection(conn, callSt);
         }
@@ -138,6 +144,7 @@ public class CourseDAOImp implements CourseDAO {
             callSt = conn.prepareCall("{call delete_course(?)}");
             callSt.setInt(1,id);
             callSt.executeUpdate();
+            return true;
         } catch (Exception e) {
             System.err.println(e.getMessage());
         } finally {
@@ -154,11 +161,9 @@ public class CourseDAOImp implements CourseDAO {
         try {
             listCourse = new ArrayList<>();
             conn = ConnectionDB.openConnection();
-            conn.setAutoCommit(false);
             callSt = conn.prepareCall("{call find_course_by_name(?)}");
             callSt.setString(1, name);
             ResultSet rs = callSt.executeQuery();
-            conn.commit();
             while (rs.next()) {
                Course course = new Course();
                 course.setId(rs.getInt("course_id"));
@@ -168,16 +173,9 @@ public class CourseDAOImp implements CourseDAO {
                 course.setDate(rs.getDate("create_at").toLocalDate());
                 listCourse.add(course);
             }
-            conn.commit();
         } catch (Exception e) {
             System.err.println(e.getMessage());
-            if (conn != null) {
-                try {
-                    conn.rollback();
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
+
         } finally {
             ConnectionDB.closeConnection(conn, callSt);
         }

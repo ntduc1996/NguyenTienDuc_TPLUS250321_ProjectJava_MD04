@@ -1,12 +1,6 @@
-package model;
-
-import dao.StudentDAO;
-import dao.imp.StudentDAOImp;
-import validate.Validator;
+package model.entity;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Scanner;
 
 public class Student {
     private int id;

@@ -1,13 +1,12 @@
 package dao.imp;
 
 import dao.AdminDAO;
-import model.Admin;
+import model.entity.Admin;
 import ulti.ConnectionDB;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class AdminDAOImp implements AdminDAO {
     @Override

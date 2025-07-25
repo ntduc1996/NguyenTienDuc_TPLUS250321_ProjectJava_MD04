@@ -1,6 +1,6 @@
 package business;
 
-import model.Student;
+import model.entity.Student;
 
 import java.util.List;
 import java.util.Scanner;

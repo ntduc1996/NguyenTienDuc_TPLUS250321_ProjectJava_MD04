@@ -1,4 +1,6 @@
-package model;
+package model.entity;
+
+import model.Constants;
 
 import java.time.LocalDateTime;
 

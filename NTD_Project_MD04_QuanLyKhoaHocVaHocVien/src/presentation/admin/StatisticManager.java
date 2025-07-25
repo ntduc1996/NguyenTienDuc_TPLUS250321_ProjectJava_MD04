@@ -1,10 +1,19 @@
 package presentation.admin;
 
+import business.IStatisticServices;
+import business.imp.StatisticServices;
+import dao.StatisticsDAO;
 import validate.Validator;
 
 import java.util.Scanner;
 
 public class StatisticManager {
+    private final IStatisticServices statisticsServices;
+
+    public StatisticManager() {
+        statisticsServices = new StatisticServices();
+    }
+
     public void statisticManagerMenu(Scanner scanner) {
         boolean isExit = true;
         do {
@@ -18,12 +27,16 @@ public class StatisticManager {
             if (Validator.inputIsInteger(choice)) {
                 switch (Integer.parseInt(choice)) {
                     case 1:
+                        statisticsServices.showTotalStudentsAndCourses();
                         break;
                     case 2:
+                        statisticsServices.showStudentCountPerCourse();
                         break;
                     case 3:
+                        statisticsServices.showTop5Courses();
                         break;
                     case 4:
+                        statisticsServices.showCourseHaveMoreThan10Students();
                         break;
                     case 5:
                         isExit = false;

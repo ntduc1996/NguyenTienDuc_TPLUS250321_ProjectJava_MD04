@@ -1,9 +1,7 @@
 package dao.imp;
 
 import dao.StudentDAO;
-import model.Admin;
-import model.Course;
-import model.Student;
+import model.entity.Student;
 import presentation.color.Color;
 import ulti.ConnectionDB;
 import ulti.Session;

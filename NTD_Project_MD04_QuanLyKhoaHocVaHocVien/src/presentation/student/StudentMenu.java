@@ -6,21 +6,25 @@ import business.IStudentServices;
 import business.imp.CourseServices;
 import business.imp.EnrollmentServices;
 import business.imp.StudentServices;
-import dao.EnrollmentDAO;
-import dao.imp.EnrollmentDAOImp;
-import model.Admin;
-import model.Student;
-import presentation.color.Color;
+import dao.CourseDAO;
+import dao.imp.CourseDAOImp;
+import model.*;
+import model.entity.Course;
+import model.entity.Student;
 import validate.Validator;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
 public class StudentMenu {
     private final IStudentServices studentServices;
     private final ICourseServices courseServices;
+    private final IEnrollmentServices enrollmentServices;
 
     public StudentMenu() {
+        enrollmentServices = new EnrollmentServices();
         courseServices = new CourseServices();
         studentServices = new StudentServices();
     }
@@ -48,7 +52,8 @@ public class StudentMenu {
             return false;
         }
     }
-    public void  displayStudentMenu(Scanner scanner) {
+
+    public void displayStudentMenu(Scanner scanner) {
         boolean isExit = true;
         do {
             System.out.println("============ MENU HỌC VIÊN ============");
@@ -64,18 +69,61 @@ public class StudentMenu {
             if (Validator.inputIsInteger(choice)) {
                 switch (Integer.parseInt(choice)) {
                     case 1:
-                        System.out.printf("|%-5s|%-55s|%-10s|%-30s|%-15s|\n","STT","Tên khóa học","Thời lượng", "Giáo viên","Ngày tạo");
-                        courseServices.showAllCourse().forEach(System.out::println);
+                        System.out.println("1. Hiển thị tất cả danh sách khóa học");
+                        System.out.println("2. Tìm các khóa học theo tên");
+                        String input = scanner.nextLine().trim();
+                        if ("1".equals(input)) {
+                            System.out.printf("|%-5s|%-55s|%-10s|%-30s|%-15s|\n", "STT", "Tên khóa học", "Thời lượng", "Giáo viên", "Ngày tạo");
+                            courseServices.showAllCourse().forEach(System.out::println);
+                        } else if ("2".equals(input)) {
+                            CourseDAO courseDAO = new CourseDAOImp();
+                            System.out.println("Nhập tên khóa học muốn tìm");
+                            String courseName = scanner.nextLine();
+                            List<Course> listByName = courseDAO.findCourseByName(courseName);
+                            listByName.forEach(System.out::println);
+                        } else {
+                            System.out.println("Mời chọn 1 trong 2 cách hiển thị danh sách khóa học");
+                        }
                         break;
                     case 2:
-                        IEnrollmentServices enrollmentServices = new EnrollmentServices();
                         enrollmentServices.addEnrollmentByStudent(scanner);
                         break;
                     case 3:
-                        IEnrollmentServices enrollmentServices2 = new EnrollmentServices();
-                        enrollmentServices2.getEnrollmentByStudent().forEach(System.out::println);
+                        do {
+                            System.out.println("Chọn cách hiển thị");
+                            System.out.println("1. Khóa học sắp xếp theo tên tăng dần");
+                            System.out.println("2. Khóa học sắp xếp theo tên giảm dần");
+                            System.out.println("3. Khóa học sắp xếp theo ngày đăng ký tăng dần");
+                            System.out.println("4. Khóa học sắp xếp theo ngày đăng ký giảm dần");
+                            String inputChoice = scanner.nextLine();
+                            if ("1".equals(inputChoice)) {
+                                enrollmentServices.getEnrollmentByStudent().stream()
+                                        .sorted(Comparator.comparing(CourseEnrollment::getCourseName))
+                                        .toList().forEach(System.out::println);
+                                break;
+                            } else if ("2".equals(inputChoice)) {
+                                enrollmentServices.getEnrollmentByStudent().stream()
+                                        .sorted(Comparator.comparing(CourseEnrollment::getCourseName).reversed())
+                                        .toList().forEach(System.out::println);
+                                break;
+                            } else if ("3".equals(inputChoice)) {
+                                enrollmentServices.getEnrollmentByStudent().stream()
+                                        .sorted(Comparator.comparing(CourseEnrollment::geteRegisterAt))
+                                        .toList().forEach(System.out::println);
+                                break;
+                            } else if ("4".equals(inputChoice)) {
+                                enrollmentServices.getEnrollmentByStudent().stream()
+                                        .sorted(Comparator.comparing(CourseEnrollment::geteRegisterAt).reversed())
+                                        .toList().forEach(System.out::println);
+                                break;
+                            } else {
+                                System.out.println("Mời chọn lại (1-4)");
+                            }
+                        } while (true);
+
                         break;
                     case 4:
+                        enrollmentServices.cancelEnrollmentByStudent(scanner);
                         break;
                     case 5:
                         studentServices.changePassword(scanner);
@@ -85,7 +133,8 @@ public class StudentMenu {
                         break;
                     default:
                         System.out.println("Mời chọn mục (1-6)");
-                }}
+                }
+            }
 
         } while (isExit);
     }

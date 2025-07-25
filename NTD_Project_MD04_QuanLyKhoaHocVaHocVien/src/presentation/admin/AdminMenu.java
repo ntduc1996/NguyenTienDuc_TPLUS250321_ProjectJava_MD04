@@ -2,7 +2,7 @@ package presentation.admin;
 
 import business.IAdminServices;
 import business.imp.AdminServices;
-import model.Admin;
+import model.entity.Admin;
 import validate.Validator;
 
 import java.util.Objects;

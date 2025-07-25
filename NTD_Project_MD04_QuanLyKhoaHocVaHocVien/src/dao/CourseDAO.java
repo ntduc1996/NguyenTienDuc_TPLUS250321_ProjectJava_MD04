@@ -1,9 +1,8 @@
 package dao;
 
-import model.Course;
+import model.entity.Course;
 
 import java.util.List;
-import java.util.Scanner;
 
 public interface CourseDAO {
     List<Course> showAllCourse();

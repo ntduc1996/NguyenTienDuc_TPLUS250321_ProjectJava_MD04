@@ -273,7 +273,7 @@ END;
 # Lấy thông tin sinh viên theo id
 CREATE PROCEDURE find_student_by_id(id_in INT)
 BEGIN
-    SELECT student_name, student_dob, email, sex, phone, password, create_at FROM student WHERE student_id = id_in;
+    SELECT student_id, student_name, student_dob, email, sex, phone, password, create_at FROM student WHERE student_id = id_in;
 END;
 
 # tìm kiếm thông tin sinh viên theo id hoặc email hoặc họ tên
@@ -307,20 +307,24 @@ END;
 # END ;
 
 # Đăng ký khóa học (có bao gồm kiểm tra)
-CREATE PROCEDURE register_course(s_id INT, c_id INT, OUT message VARCHAR(100))
+CREATE PROCEDURE register_course (
+    IN student_id_in INT,
+    IN course_id_in INT,
+    OUT not_exist BIT
+)
 BEGIN
-    IF EXISTS (SELECT 1
-               FROM enrollment
-               WHERE student_id = s_id
-                 AND course_id = c_id) THEN
-
-        SET message = 'Học viên đã đăng ký khóa học này.';
+    IF EXISTS (
+        SELECT 1 FROM enrollment
+        WHERE student_id = student_id_in AND course_id = course_id_in
+    ) THEN
+        SET not_exist = 0;
     ELSE
-        INSERT INTO enrollment(student_id, course_id, status)
-        VALUES (s_id, c_id, 'WAITING');
-        SET message = 'Đăng ký khóa học thành công.';
+        INSERT INTO enrollment(student_id, course_id)
+        VALUES (student_id_in, course_id_in);
+        SET not_exist = 1;
     END IF;
 END;
+
 
 # Xem khóa học đã đăng ký bởi học viên
 CREATE PROCEDURE get_enrolled_courses_by_student(IN student_id INT)

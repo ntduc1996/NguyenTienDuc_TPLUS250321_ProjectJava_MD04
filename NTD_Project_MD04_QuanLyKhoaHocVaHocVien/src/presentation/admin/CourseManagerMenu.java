@@ -2,7 +2,7 @@ package presentation.admin;
 
 import business.ICourseServices;
 import business.imp.CourseServices;
-import model.Course;
+import model.entity.Course;
 import presentation.color.Color;
 import validate.Validator;
 
