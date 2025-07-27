@@ -95,7 +95,7 @@ public class CourseServices implements ICourseServices {
                             try {
                                 course.setDuration(Integer.parseInt(duration));
                             } catch (Exception e) {
-                                e.getMessage();
+                                e.printStackTrace();
                             }
                         } while (!Validator.inputIsInteger(duration));
                         break;
@@ -153,6 +153,8 @@ public class CourseServices implements ICourseServices {
         if (scanner.nextLine().equalsIgnoreCase("Y")) {
             courseDAO.deleteCourse(course.getId());
             System.out.println(Color.ANSI_GREEN_BACKGROUND + "Đã xóa thành công" + Color.ANSI_RESET);
+        }else {
+            System.out.println(Color.ANSI_YELLOW_BACKGROUND+"Không xóa khóa học, trở về menu trước"+Color.ANSI_RESET);
         }
     }
 

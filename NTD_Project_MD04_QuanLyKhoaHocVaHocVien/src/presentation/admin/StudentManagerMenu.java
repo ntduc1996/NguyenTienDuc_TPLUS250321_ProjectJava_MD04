@@ -96,22 +96,26 @@ public class StudentManagerMenu {
                             if (Validator.inputIsInteger(choice2)) {
                                 switch (Integer.parseInt(choice2)) {
                                     case 1:
-                                        studentServices.allStudentList().stream().
-                                                sorted(Comparator.comparing(Student::getStudentName)).toList()
+                                        System.out.printf("|%-5s|%-30s|%-15s|%-30s|%-15s|%-15s|%-20s|%-15s|\n","Id","Tên học viên","Ngày sinh","Email","Giới tính","Số điện thoại","Mật khẩu","Ngày tạo");
+                                        studentServices.allStudentList().stream()
+                                                .sorted(Comparator.comparing(Student::getStudentName))
                                                 .forEach(System.out::println);
                                         break;
                                     case 2:
+                                        System.out.printf("|%-5s|%-30s|%-15s|%-30s|%-15s|%-15s|%-20s|%-15s|\n","Id","Tên học viên","Ngày sinh","Email","Giới tính","Số điện thoại","Mật khẩu","Ngày tạo");
                                         studentServices.allStudentList().stream().
-                                                sorted(Comparator.comparing(Student::getId)).toList().forEach(System.out::println);
+                                                sorted(Comparator.comparing(Student::getId)).forEach(System.out::println);
                                         break;
                                     case 3:
-                                        studentServices.allStudentList().stream().
-                                                sorted(Comparator.comparing(Student::getStudentName).reversed()).toList()
+                                        System.out.printf("|%-5s|%-30s|%-15s|%-30s|%-15s|%-15s|%-20s|%-15s|\n","Id","Tên học viên","Ngày sinh","Email","Giới tính","Số điện thoại","Mật khẩu","Ngày tạo");
+                                        studentServices.allStudentList().stream()
+                                                .sorted(Comparator.comparing(Student::getStudentName).reversed())
                                                 .forEach(System.out::println);
                                         break;
                                     case 4:
+                                        System.out.printf("|%-5s|%-30s|%-15s|%-30s|%-15s|%-15s|%-20s|%-15s|\n","Id","Tên học viên","Ngày sinh","Email","Giới tính","Số điện thoại","Mật khẩu","Ngày tạo");
                                         studentServices.allStudentList().stream().
-                                                sorted(Comparator.comparing(Student::getId).reversed()).toList()
+                                                sorted(Comparator.comparing(Student::getId).reversed())
                                                 .forEach(System.out::println);
                                         break;
                                     case 5:

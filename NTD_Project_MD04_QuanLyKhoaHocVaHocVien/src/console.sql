@@ -36,11 +36,11 @@ CREATE TABLE enrollment
     status        ENUM ('WAITING','DENIED','CANCEL','CONFIRM') DEFAULT 'WAITING'
 );
 INSERT INTO admin (username, password)
-VALUES ('admin01', 'adminpass123'),
-       ('admin02', 'securepass456');
+VALUES ('admin01', 'Admin123'),
+       ('admin02', 'Admin123');
 
 INSERT INTO student (student_name, student_dob, email, sex, phone, password, create_at)
-VALUES ('Nguyen Van A', '2000-05-15', 'a.nguyen@example.com', 1, '0901234567', 'pass123', '2025-01-10'),
+VALUES ('Nguyen Van A', '2000-05-15', 'a.nguyen@example.com', 1, '0901234567', 'Pass123', '2025-01-10'),
        ('Tran Thi B', '2001-08-20', 'b.tran@example.com', 0, '0912345678', 'pass456', '2025-02-12'),
        ('Le Van C', '1999-11-05', 'c.le@example.com', 1, '0933456789', 'pass789', '2025-03-05'),
        ('Pham Thi D', '2002-03-22', 'd.pham@example.com', 0, '0978123456', 'pass234', '2025-04-01'),
@@ -119,7 +119,8 @@ CREATE PROCEDURE login_student(
     OUT id_out INT
 )
 BEGIN
-    SELECT student_id INTO id_out
+    SELECT student_id
+    INTO id_out
     FROM student
     WHERE email = email_in
       AND password = password_in;
@@ -214,7 +215,7 @@ END;
 --     LIMIT data_of_page OFFSET index_data;
 -- END;
 
-# Bảng student
+
 # Hiển thị danh sách sinh viên
 CREATE PROCEDURE show_all_student()
 BEGIN
@@ -273,7 +274,16 @@ END;
 # Lấy thông tin sinh viên theo id
 CREATE PROCEDURE find_student_by_id(id_in INT)
 BEGIN
-    SELECT student_id, student_name, student_dob, email, sex, phone, password, create_at FROM student WHERE student_id = id_in;
+    SELECT student_id,
+           student_name,
+           student_dob,
+           email,
+           sex,
+           phone,
+           password,
+           create_at
+    FROM student
+    WHERE student_id = id_in;
 END;
 
 # tìm kiếm thông tin sinh viên theo id hoặc email hoặc họ tên
@@ -307,16 +317,16 @@ END;
 # END ;
 
 # Đăng ký khóa học (có bao gồm kiểm tra)
-CREATE PROCEDURE register_course (
+CREATE PROCEDURE register_course(
     IN student_id_in INT,
     IN course_id_in INT,
     OUT not_exist BIT
 )
 BEGIN
-    IF EXISTS (
-        SELECT 1 FROM enrollment
-        WHERE student_id = student_id_in AND course_id = course_id_in
-    ) THEN
+    IF EXISTS (SELECT 1
+               FROM enrollment
+               WHERE student_id = student_id_in
+                 AND course_id = course_id_in) THEN
         SET not_exist = 0;
     ELSE
         INSERT INTO enrollment(student_id, course_id)
@@ -339,6 +349,97 @@ BEGIN
     WHERE e.student_id = student_id;
 END;
 
+# Thay đổi trạng thái Enrollment sang cancel (học viên hủy đăng ký khóa học)
+CREATE PROCEDURE cancel_enrollment_by_student(s_id_in INT, c_id_in INT)
+BEGIN
+    UPDATE enrollment
+    SET status = 'CANCEL'
+    WHERE status = 'WAITING'
+      AND course_id = c_id_in
+      AND student_id = s_id_in;
+END;
+
+# lấy danh sách học viên đăng ký theo từng khóa học
+CREATE PROCEDURE get_list_student_by_course()
+BEGIN
+    SELECT e.enrollment_id, e.course_id, e.student_id, c.course_name, s.student_name, e.status
+    FROM enrollment e
+             INNER JOIN course c ON e.course_id = c.course_id
+             INNER JOIN student s ON e.student_id = s.student_id;
+END;
+
+# kiểm tra mã đăng ký khóa học
+CREATE PROCEDURE is_enrollment_id_exist(id_in int)
+BEGIN
+    SELECT * FROM enrollment WHERE enrollment_id = id_in;
+END ;
+# duyệt học viên đăng ký khóa học
+CREATE PROCEDURE confirm_student_to_enrollment(e_id_in INT)
+BEGIN
+    UPDATE enrollment
+    SET status = 'CONFIRM'
+    WHERE enrollment_id = e_id_in
+      AND status = 'WAITING';
+END;
+# xóa học viên khỏi khóa học
+
+CREATE PROCEDURE denied_student_to_enrollment(e_id_in INT)
+BEGIN
+    UPDATE enrollment
+    SET status = 'DENIED'
+    WHERE enrollment_id = e_id_in
+      AND status = 'CONFIRM';
+END;
+
+# Đếm số khóa học và số học viên
+CREATE PROCEDURE count_total_students_courses(
+    OUT total_students INT,
+    OUT total_courses INT
+)
+BEGIN
+    SELECT COUNT(*) INTO total_students FROM student;
+    SELECT COUNT(*) INTO total_courses FROM course;
+END ;
+
+# đếm tổng số sinh viên theo từng khóa học
+CREATE PROCEDURE count_students_per_course()
+BEGIN
+    SELECT
+        c.course_id,
+        c.course_name,
+        COUNT(e.student_id) AS total_students
+    FROM course c
+             LEFT JOIN enrollment e ON c.course_id = e.course_id
+    GROUP BY c.course_id, c.course_name;
+END ;
+
+# lấy top 5 khóa học đông sinh viên nhất
+CREATE PROCEDURE top5_courses()
+BEGIN
+    SELECT
+        c.course_id,
+        c.course_name,
+        COUNT(e.student_id) AS student_count
+    FROM course c
+             LEFT JOIN enrollment e ON c.course_id = e.course_id
+    GROUP BY c.course_id, c.course_name
+    ORDER BY student_count DESC
+    LIMIT 5;
+END;
+
+# Khóa học có trên 10 học viên
+
+CREATE PROCEDURE courses_over_10_students()
+BEGIN
+    SELECT
+        c.course_id,
+        c.course_name,
+        COUNT(e.student_id) AS student_count
+    FROM course c
+             LEFT JOIN enrollment e ON c.course_id = e.course_id
+    GROUP BY c.course_id, c.course_name
+    HAVING student_count > 10;
+END ;
+
 DELIMITER &&
 
-CALL get_enrolled_courses_by_student(2);

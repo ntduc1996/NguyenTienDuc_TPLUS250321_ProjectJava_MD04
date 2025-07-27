@@ -33,13 +33,13 @@ public class StudentMenu {
         String email;
         System.out.print("Nhập email: ");
         do {
-            email = "a.nguyen@example.com";
+            email = scanner.nextLine();
         } while (!Validator.inputNotEmpty(email));
 
         String password;
         System.out.print("Nhập password: ");
         do {
-            password = "PassWord";
+            password = scanner.nextLine();
         } while (!Validator.inputNotEmpty(password));
 
         Student student = studentServices.loginStudent(email, password);
@@ -99,22 +99,22 @@ public class StudentMenu {
                             if ("1".equals(inputChoice)) {
                                 enrollmentServices.getEnrollmentByStudent().stream()
                                         .sorted(Comparator.comparing(CourseEnrollment::getCourseName))
-                                        .toList().forEach(System.out::println);
+                                        .forEach(System.out::println);
                                 break;
                             } else if ("2".equals(inputChoice)) {
                                 enrollmentServices.getEnrollmentByStudent().stream()
                                         .sorted(Comparator.comparing(CourseEnrollment::getCourseName).reversed())
-                                        .toList().forEach(System.out::println);
+                                        .forEach(System.out::println);
                                 break;
                             } else if ("3".equals(inputChoice)) {
                                 enrollmentServices.getEnrollmentByStudent().stream()
                                         .sorted(Comparator.comparing(CourseEnrollment::geteRegisterAt))
-                                        .toList().forEach(System.out::println);
+                                        .forEach(System.out::println);
                                 break;
                             } else if ("4".equals(inputChoice)) {
                                 enrollmentServices.getEnrollmentByStudent().stream()
                                         .sorted(Comparator.comparing(CourseEnrollment::geteRegisterAt).reversed())
-                                        .toList().forEach(System.out::println);
+                                        .forEach(System.out::println);
                                 break;
                             } else {
                                 System.out.println("Mời chọn lại (1-4)");

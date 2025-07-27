@@ -18,13 +18,13 @@ public class AdminMenu {
         String username;
         System.out.print("Nhập username: ");
         do {
-            username = "admin01";
+            username = scanner.nextLine();
         } while (!Validator.inputNotEmpty(username));
         String password;
         System.out.print("Nhập password: ");
         do {
-            password = "adminpass123";
-        } while (!Validator.inputNotEmpty(password));
+            password = scanner.nextLine();
+        } while (!Validator.passwordLegit(password));
         Admin admin = adminServices.loginAdmin(username, password);
 
         if (!Objects.isNull(admin)) {

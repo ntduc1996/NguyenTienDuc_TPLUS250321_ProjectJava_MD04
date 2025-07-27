@@ -98,7 +98,7 @@ public class Student {
 
     @Override
     public String toString() {
-        return String.format("|%-5d|%-30s|%-15s|%-30s|%-6s|%-15s|%-20s|%-15s|\n",
+        return String.format("|%-5d|%-30s|%-15s|%-30s|%-15s|%-15s|%-20s|%-15s|\n",
                 this.id,
                 this.studentName,
                 this.dateOfBirth.toString(),
