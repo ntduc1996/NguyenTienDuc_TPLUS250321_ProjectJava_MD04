@@ -160,7 +160,7 @@ public class CourseServices implements ICourseServices {
 
     @Override
     public List<Course> listCourseByName(Scanner scanner) {
-        System.out.println("Nhập tên khóa học muốn tìm: ");
+        System.out.println("Nhập tên khóa học muốn tìm (Nếu để trống sẽ in ra toàn bộ khóa học!): ");
         String name = scanner.nextLine();
         return courseDAO.findCourseByName(name);
     }

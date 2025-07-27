@@ -32,8 +32,9 @@ public class CourseManagerMenu {
             if (Validator.inputIsInteger(choice) ) {
                 switch (Integer.parseInt(choice)) {
                     case 1:
-                        System.out.printf("|%-5s|%-55s|%-10s|%-30s|%-15s|\n","STT","Tên khóa học","Thời lượng", "Giáo viên","Ngày tạo");
+                        makeColor();
                         courseServices.showAllCourse().forEach(System.out::print);
+                        System.out.println("-".repeat(121));
                         break;
                     case 2:
                         courseServices.addCourse(scanner);
@@ -45,15 +46,17 @@ public class CourseManagerMenu {
                         courseServices.deleteCourse(scanner);
                         break;
                     case 5:
-                        if(courseServices.listCourseByName(scanner).isEmpty()) {
+                        List<Course> courses = courseServices.listCourseByName(scanner);
+                        if(courses.isEmpty()) {
                             System.out.println(Color.ANSI_RED_BACKGROUND+"Không có tên khóa học phù hợp"+Color.ANSI_RESET);
                         }else {
-                            courseServices.listCourseByName(scanner).forEach(System.out::println);
+                            makeColor();
+                           courses.forEach(System.out::println);
                         }
                         break;
                     case 6:
                         boolean returnMenu = true;
-                        List<Course> courses = courseServices.showAllCourse();
+                        List<Course> courseList = courseServices.showAllCourse();
                         do {
                             System.out.println("Chọn cách sắp xếp: ");
                             System.out.println("1. Sắp xếp tăng dần theo tên");
@@ -65,16 +68,20 @@ public class CourseManagerMenu {
                             int choice2 = Integer.parseInt(scanner.nextLine());
                             switch (choice2) {
                                 case 1:
-                                    courses.stream().sorted(Comparator.comparing(Course::getCourseName)).toList().forEach(System.out::println);
+                                    makeColor();
+                                    courseList.stream().sorted(Comparator.comparing(Course::getCourseName)).forEach(System.out::println);
                                     break;
                                 case 2:
-                                    courses.stream().sorted(Comparator.comparing(Course::getCourseName).reversed()).toList().forEach(System.out::println);
+                                    makeColor();
+                                    courseList.stream().sorted(Comparator.comparing(Course::getCourseName).reversed()).forEach(System.out::println);
                                     break;
                                 case 3:
-                                    courses.stream().sorted(Comparator.comparing(Course::getId)).toList().forEach(System.out::println);
+                                    makeColor();
+                                    courseList.stream().sorted(Comparator.comparing(Course::getId)).forEach(System.out::println);
                                     break;
                                 case 4:
-                                    courses.stream().sorted(Comparator.comparing(Course::getId).reversed()).toList().forEach(System.out::println);
+                                    makeColor();
+                                    courseList.stream().sorted(Comparator.comparing(Course::getId).reversed()).forEach(System.out::println);
                                     break;
                                 case 5:
                                     returnMenu = false;
@@ -92,6 +99,14 @@ public class CourseManagerMenu {
                 }
             }
         }while (isExit) ;
+    }
+
+    private static void makeColor() {
+        System.out.println("-".repeat(121));
+        System.out.print(Color.ANSI_BLUE_BACKGROUND);
+        System.out.printf("|%-5s|%-50s|%-15s|%-30s|%-15s|","STT","Tên khóa học","Thời lượng", "Giáo viên","Ngày tạo");
+        System.out.println(Color.ANSI_RESET);
+        System.out.println("-".repeat(121));
     }
 }
 

@@ -63,7 +63,7 @@ public class Course {
 
     @Override
     public String toString() {
-        return String.format("|%-5d|%-55s|%-10d|%-30s|%-15s|\n", this.id, this.courseName, this.duration, this.instructor, this.createdAt.toString());
+        return String.format("|%-5d|%-50s|%-15d|%-30s|%-15s|\n", this.id, this.courseName, this.duration, this.instructor, this.createdAt.toString());
     }
 
 }

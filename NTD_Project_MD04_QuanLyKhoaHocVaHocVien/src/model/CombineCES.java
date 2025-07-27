@@ -70,6 +70,7 @@ public class CombineCES {
 
     @Override
     public String toString() {
-        return String.format("|%-5d|%-5d|%-5d|%-50s|%-40s|%-10s\n", this.enrollmentId, this.courseId, this.studentId, this.courseName, this.studentName, this.status);
+        return String.format("|%-15d|%-15d|%-15d|%-50s|%-30s|%-10s|\n"
+              , this.enrollmentId, this.courseId, this.studentId, this.courseName, this.studentName, this.status);
     }
 }

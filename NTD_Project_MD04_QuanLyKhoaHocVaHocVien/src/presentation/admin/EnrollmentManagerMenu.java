@@ -28,6 +28,9 @@ public class EnrollmentManagerMenu {
             if (Validator.inputIsInteger(choice)) {
                 switch (Integer.parseInt(choice)) {
                     case 1:
+                        System.out.println("-".repeat(142));
+                        System.out.printf("|%-15s|%-15s|%-15s|%-50s|%-30s|%-10s|\n","Mã đăng ký","Mã khóa học","Mã học viên","Tên khóa học","Tên học viên","Trạng thái");
+                        System.out.println("-".repeat(142));
                         enrollmentService.listStudentByCourse().stream()
                                 .sorted(Comparator.comparing(CombineCES::getCourseId))
                                 .toList().forEach(System.out::println);
