@@ -47,10 +47,8 @@ public class StudentMenu {
             System.out.println("Đăng nhập thành công! Xin chào ");
             // Chuyển đến menu chính
             return true;
-        } else {
-            System.out.println("Đăng nhập thất bại!");
-            return false;
         }
+        return false;
     }
 
     public void displayStudentMenu(Scanner scanner) {
